@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.FSAD_SDP_10.library_backend.model.User;
 import com.FSAD_SDP_10.library_backend.repository.UserRepository;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -11,27 +12,27 @@ public class UserService {
     @Autowired
     private UserRepository repo;
 
-    // Register
+    // Register user
     public String register(User user) {
-        if (repo.findByUsername(user.getUsername()) != null) {
-            return "User already exists!";
+        if (repo.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists!");
+        }
+        if (repo.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered!");
         }
         repo.save(user);
         return "User Registered Successfully";
     }
 
-    // Login
+    // Login user
     public String login(String username, String password) {
-        User user = repo.findByUsername(username);
+        Optional<User> optionalUser = repo.findByUsername(username);
 
-        if (user == null) {
+        if (optionalUser.isEmpty()) {
             return "User not found";
         }
 
-        if (user.getPassword().equals(password)) {
-            return "Login Successful";
-        } else {
-            return "Invalid Password";
-        }
+        User user = optionalUser.get();
+        return user.getPassword().equals(password) ? "Login Successful" : "Invalid Password";
     }
 }
