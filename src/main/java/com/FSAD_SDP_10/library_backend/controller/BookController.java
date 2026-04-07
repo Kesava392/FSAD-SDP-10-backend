@@ -4,6 +4,7 @@ import com.FSAD_SDP_10.library_backend.model.Book;
 import com.FSAD_SDP_10.library_backend.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -13,17 +14,24 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookRepository bookRepository; // 
+    private BookRepository bookRepository;
 
-    // GET all books from the database
     @GetMapping
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-    // POST a new book to the database (for your React form)
     @PostMapping
     public Book addBook(@RequestBody Book book) {
         return bookRepository.save(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        if (bookRepository.existsById(id)) {
+            bookRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
