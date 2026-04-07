@@ -9,11 +9,15 @@ import com.FSAD_SDP_10.library_backend.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     @Autowired
     private UserService service;
+
+    // Hardcoded admin credentials
+    private final String ADMIN_USERNAME = "admin";
+    private final String ADMIN_PASSWORD = "k392d100076k344";
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
@@ -27,6 +31,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody User user) {
+        // 1. Check if login is admin
+        if (ADMIN_USERNAME.equals(user.getUsername()) && ADMIN_PASSWORD.equals(user.getPassword())) {
+            return ResponseEntity.ok("Admin Login Successful");
+        }
+
+        // 2. Otherwise check database users
         String message = service.login(user.getUsername(), user.getPassword());
         if (message.equals("Login Successful")) {
             return ResponseEntity.ok(message);
