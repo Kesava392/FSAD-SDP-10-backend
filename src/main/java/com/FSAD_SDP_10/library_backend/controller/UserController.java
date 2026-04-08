@@ -17,7 +17,7 @@ public class UserController {
 
     // Hardcoded admin credentials
     private final String ADMIN_USERNAME = "admin";
-    private final String ADMIN_PASSWORD = "k392d100076k344";
+    private final String ADMIN_PASSWORD = "dkk";
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
