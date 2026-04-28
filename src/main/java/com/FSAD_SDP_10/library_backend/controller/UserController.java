@@ -9,7 +9,7 @@ import com.FSAD_SDP_10.library_backend.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
